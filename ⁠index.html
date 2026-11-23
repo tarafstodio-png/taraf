@@ -1,0 +1,586 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TARAF STUDIO | ترف للدعوات الرقمية</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&family=Playfair+Display:wght@500;600;700&display=swap" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
+  <style>
+    :root {
+      --sky: #A7C4DE;
+      --ice: #DCEAF4;
+      --cream: #FAF8F5;
+      --ink: #1E3347;
+      --muted: #556D82;
+      --card: #FFFFFF;
+      --border: rgba(30, 51, 71, 0.12);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Cairo', sans-serif;
+      background-color: var(--cream);
+      color: var(--ink);
+      line-height: 1.7;
+      min-height: 100vh;
+      position: relative;
+      overflow-x: hidden;
+    }
+
+    /* خلفية الفيونكة الناعمة */
+    .bow-bg {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+      opacity: 0.18;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180' viewBox='0 0 180 180'%3E%3Cg fill='none' stroke='%23A7C4DE' stroke-width='2.2'%3E%3Cpath d='M90 90 C65 62, 32 62, 32 90 C32 118, 65 118, 90 90 Z'/%3E%3Cpath d='M90 90 C115 62, 148 62, 148 90 C148 118, 115 118, 90 90 Z'/%3E%3Crect x='82' y='82' width='16' height='16' rx='5' fill='%23DCEAF4'/%3E%3Cpath d='M84 98 L72 134 M96 98 L108 134' stroke-linecap='round'/%3E%3C/g%3E%3C/svg%3E");
+      background-size: 180px 180px;
+    }
+
+    .container {
+      position: relative;
+      z-index: 1;
+      max-width: 680px;
+      margin: 0 auto;
+      padding: 20px 16px 60px;
+    }
+
+    header {
+      background: linear-gradient(135deg, var(--ice), var(--sky));
+      border-radius: 24px;
+      padding: 28px 20px;
+      text-align: center;
+      box-shadow: 0 10px 30px rgba(30, 51, 71, 0.08);
+      margin-bottom: 18px;
+    }
+
+    .brand-en {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.85rem;
+      letter-spacing: 2px;
+      font-weight: 700;
+      color: var(--ink);
+    }
+
+    .brand-ar {
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: var(--ink);
+      margin-top: 2px;
+    }
+
+    .tagline {
+      font-size: 0.9rem;
+      color: var(--muted);
+      margin-top: 6px;
+    }
+
+    nav {
+      display: flex;
+      gap: 8px;
+      overflow-x: auto;
+      padding: 4px 2px 12px;
+      margin-bottom: 14px;
+      scrollbar-width: none;
+    }
+
+    nav::-webkit-scrollbar {
+      display: none;
+    }
+
+    .tab-btn {
+      flex: 0 0 auto;
+      border: 1px solid var(--border);
+      background: var(--card);
+      color: var(--ink);
+      font-family: 'Cairo', sans-serif;
+      font-size: 0.9rem;
+      font-weight: 600;
+      padding: 9px 15px;
+      border-radius: 999px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .tab-btn.active {
+      background: var(--ink);
+      color: #fff;
+      border-color: var(--ink);
+    }
+
+    section.panel {
+      display: none;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 22px;
+      padding: 22px 18px;
+      box-shadow: 0 8px 24px rgba(30, 51, 71, 0.05);
+    }
+
+    section.panel.active {
+      display: block;
+    }
+
+    h2 {
+      font-size: 1.25rem;
+      margin-bottom: 12px;
+      color: var(--ink);
+    }
+
+    p {
+      color: var(--muted);
+      font-size: 0.95rem;
+      margin-bottom: 12px;
+    }
+
+    .invite-card {
+      background: linear-gradient(180deg, var(--cream), var(--ice));
+      border: 1.5px solid var(--sky);
+      border-radius: 20px;
+      padding: 22px 18px;
+      text-align: center;
+      margin-bottom: 18px;
+    }
+
+    .invite-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.35rem;
+      color: var(--ink);
+      margin-bottom: 6px;
+    }
+
+    .invite-names {
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: var(--ink);
+      margin: 8px 0;
+    }
+
+    .invite-meta {
+      font-size: 0.92rem;
+      color: var(--ink);
+      margin: 4px 0;
+    }
+
+    .field {
+      margin-bottom: 14px;
+    }
+
+    label {
+      display: block;
+      font-size: 0.88rem;
+      font-weight: 600;
+      margin-bottom: 6px;
+      color: var(--ink);
+    }
+
+    input, select {
+      width: 100%;
+      padding: 11px 13px;
+      border-radius: 12px;
+      border: 1px solid rgba(30, 51, 71, 0.2);
+      background: var(--cream);
+      font-family: 'Cairo', sans-serif;
+      font-size: 0.95rem;
+      color: var(--ink);
+    }
+
+    .btn {
+      width: 100%;
+      padding: 12px 16px;
+      border: none;
+      border-radius: 14px;
+      background: var(--ink);
+      color: #fff;
+      font-family: 'Cairo', sans-serif;
+      font-size: 0.98rem;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .btn-soft {
+      background: var(--ice);
+      color: var(--ink);
+      border: 1px solid var(--sky);
+      margin-top: 8px;
+    }
+
+    .pass-box {
+      display: none;
+      margin-top: 18px;
+      padding: 18px;
+      border-radius: 18px;
+      background: var(--cream);
+      border: 1.5px dashed var(--ink);
+      text-align: center;
+    }
+
+    .pass-code {
+      font-family: monospace;
+      font-size: 1.15rem;
+      font-weight: 700;
+      background: var(--ice);
+      display: inline-block;
+      padding: 4px 12px;
+      border-radius: 8px;
+      margin: 8px 0;
+    }
+
+    #qrcode {
+      display: flex;
+      justify-content: center;
+      margin: 12px auto;
+    }
+
+    .guest-item {
+      border: 1px solid var(--border);
+      background: var(--cream);
+      border-radius: 14px;
+      padding: 12px 14px;
+      margin-bottom: 10px;
+      font-size: 0.9rem;
+    }
+
+    .badge {
+      display: inline-block;
+      padding: 2px 10px;
+      border-radius: 999px;
+      font-size: 0.8rem;
+      font-weight: 700;
+      background: var(--ice);
+      color: var(--ink);
+    }
+
+    .services-grid {
+      display: grid;
+      gap: 10px;
+    }
+
+    .service-box {
+      background: var(--cream);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 14px;
+    }
+
+    .service-box strong {
+      display: block;
+      margin-bottom: 4px;
+      color: var(--ink);
+    }
+
+    .msg {
+      margin-top: 10px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: var(--ink);
+    }
+  </style>
+</head>
+<body>
+  <div class="bow-bg"></div>
+
+  <div class="container">
+    <header>
+      <div class="brand-en">TARAF STUDIO</div>
+      <div class="brand-ar">ترف للدعوات الرقمية</div>
+      <div class="tagline">دعوات أنيقة، تأكيد حضور ذكي، وبطاقات دخول فورية</div>
+    </header>
+
+    <nav aria-label="أقسام الموقع">
+      <button class="tab-btn active" data-tab="about">عن ترف</button>
+      <button class="tab-btn" data-tab="services">الخدمات</button>
+      <button class="tab-btn" data-tab="events">مناسباتي</button>
+      <button class="tab-btn" data-tab="guests">الضيوف</button>
+      <button class="tab-btn" data-tab="contact">تواصل معنا</button>
+    </nav>
+
+    <!-- 1. عن ترف -->
+    <section id="about" class="panel active">
+      <h2>عن استوديو ترف</h2>
+      <p>
+        منصة متخصصة في تصميم وإدارة الدعوات الرقمية للمناسبات الخاصة والرسمية بأسلوب عصري وهادئ يسهّل على المضيف إدارة الحضور من الجوال مباشرة.
+      </p>
+      <div class="invite-card">
+        <div class="invite-title">DIGITAL INVITATION</div>
+        <div class="invite-names" id="previewNames">سارة ومحمد</div>
+        <div class="invite-meta" id="previewDate">التاريخ: 15 ديسمبر 2026</div>
+        <div class="invite-meta" id="previewTime">الوقت: 8:00 مساءً</div>
+        <div class="invite-meta" id="previewVenue">القاعة: قاعة الياقوت</div>
+        <div class="invite-meta" id="previewMapWrap" style="display:none;">
+          <a id="previewMapLink" href="#" target="_blank" rel="noopener">فتح موقع المناسبة على الخريطة</a>
+        </div>
+      </div>
+
+      <h3 style="font-size:1.05rem; margin-bottom:10px;">تأكيد الحضور (RSVP)</h3>
+      <form id="rsvpForm">
+        <div class="field">
+          <label for="guestName">اسم الضيف</label>
+          <input type="text" id="guestName" placeholder="اكتبي اسم الضيف" required />
+        </div>
+        <div class="field">
+          <label for="guestStatus">حالة الحضور</label>
+          <select id="guestStatus">
+            <option value="سأحضر">سأحضر</option>
+            <option value="أعتذر عن الحضور">أعتذر عن الحضور</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="guestCount">عدد المرافقين / الحضور</label>
+          <input type="number" id="guestCount" min="1" max="20" value="1" required />
+        </div>
+        <button type="submit" class="btn">تأكيد وإصدار بطاقة الدخول</button>
+      </form>
+
+      <div id="passBox" class="pass-box">
+        <div class="badge" id="passStatusBadge">سأحضر</div>
+        <div class="pass-code" id="passCode">TRF-0000</div>
+        <p id="passSummary" style="margin-bottom:8px;"></p>
+        <div id="qrcode"></div>
+        <button type="button" class="btn btn-soft" onclick="window.print()">طباعة أو حفظ البطاقة</button>
+      </div>
+    </section>
+
+    <!-- 2. الخدمات -->
+    <section id="services" class="panel">
+      <h2>خدماتنا</h2>
+      <div class="services-grid">
+        <div class="service-box">
+          <strong>تصميم دعوة رقمية متكاملة</strong>
+          <span>بطاقة دعوة متجاوبة مع الجوال بهوية بصرية متناسقة ومعلومات المناسبة واللوكيشن.</span>
+        </div>
+        <div class="service-box">
+          <strong>إدارة تأكيد الحضور (RSVP)</strong>
+          <span>تتبع فوري لحالة الحضور وعدد الضيوف لتسهيل الترتيبات والاستقبال.</span>
+        </div>
+        <div class="service-box">
+          <strong>بطاقة دخول برمز QR</strong>
+          <span>إصدار تلقائي لرقم دخول مميز ورمز QR لكل ضيف لتسهيل التحقق عند الوصول.</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- 3. مناسباتي -->
+    <section id="events" class="panel">
+      <h2>إعداد بيانات المناسبة</h2>
+      <p>عدّلي تفاصيل المناسبة هنا وسيتم تحديث البطاقة مباشرة.</p>
+      <form id="eventForm">
+        <div class="field">
+          <label for="eventNames">أسماء أصحاب المناسبة أو عنوانها</label>
+          <input type="text" id="eventNames" value="سارة ومحمد" required />
+        </div>
+        <div class="field">
+          <label for="eventDate">التاريخ</label>
+          <input type="text" id="eventDate" value="15 ديسمبر 2026" required />
+        </div>
+        <div class="field">
+          <label for="eventTime">الوقت</label>
+          <input type="text" id="eventTime" value="8:00 مساءً" required />
+        </div>
+        <div class="field">
+          <label for="eventVenue">القاعة / المكان</label>
+          <input type="text" id="eventVenue" value="قاعة الياقوت" required />
+        </div>
+        <div class="field">
+          <label for="eventMap">رابط الموقع (اختياري)</label>
+          <input type="url" id="eventMap" placeholder="https://maps.google.com/..." />
+        </div>
+        <button type="submit" class="btn">حفظ وتحديث الدعوة</button>
+        <div id="eventMsg" class="msg"></div>
+      </form>
+    </section>
+
+    <!-- 4. الضيوف -->
+    <section id="guests" class="panel">
+      <h2>لوحة متابعة الضيوف</h2>
+      <div id="pinGate">
+        <p>هذا القسم محمي برقم سري للمضيف.</p>
+        <form id="pinForm">
+          <div class="field">
+            <label for="pinInput">الرقم السري</label>
+            <input type="password" id="pinInput" inputmode="numeric" placeholder="أدخلي الرقم السري" required />
+          </div>
+          <button type="submit" class="btn">دخول لوحة الضيوف</button>
+          <div id="pinMsg" class="msg"></div>
+        </form>
+      </div>
+
+      <div id="guestDashboard" style="display:none;">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+          <span class="badge" id="totalGuestsBadge">إجمالي الحضور: 0</span>
+          <button type="button" class="tab-btn" id="lockBtn">قفل</button>
+        </div>
+        <div id="guestList"></div>
+      </div>
+    </section>
+
+    <!-- 5. تواصل معنا -->
+    <section id="contact" class="panel">
+      <h2>تواصل معنا</h2>
+      <p>للطلبات الخاصة أو الاستفسارات حول باقات الدعوات الرقمية:</p>
+      <div class="service-box">
+        <strong>استوديو ترف — TARAF STUDIO</strong>
+        <span>البريد الإلكتروني: tarafstodio@gmail.com</span>
+      </div>
+    </section>
+  </div>
+
+  <script>
+    const PIN_CODE = "2026";
+    const STORAGE_EVENT = "taraf_event_v1";
+    const STORAGE_GUESTS = "taraf_guests_v1";
+
+    const tabs = document.querySelectorAll(".tab-btn[data-tab]");
+    const panels = document.querySelectorAll("section.panel");
+
+    tabs.forEach((btn) => {
+      btn.addEventListener("click", () => {
+        tabs.forEach((b) => b.classList.remove("active"));
+        panels.forEach((p) => p.classList.remove("active"));
+        btn.classList.add("active");
+        document.getElementById(btn.dataset.tab).classList.add("active");
+      });
+    });
+
+    function getEventData() {
+      const saved = localStorage.getItem(STORAGE_EVENT);
+      return saved ? JSON.parse(saved) : {
+        names: "سارة ومحمد",
+        date: "15 ديسمبر 2026",
+        time: "8:00 مساءً",
+        venue: "قاعة الياقوت",
+        map: ""
+      };
+    }
+
+    function renderEventPreview() {
+      const ev = getEventData();
+      document.getElementById("eventNames").value = ev.names;
+      document.getElementById("eventDate").value = ev.date;
+      document.getElementById("eventTime").value = ev.time;
+      document.getElementById("eventVenue").value = ev.venue;
+      document.getElementById("eventMap").value = ev.map || "";
+
+      document.getElementById("previewNames").textContent = ev.names;
+      document.getElementById("previewDate").textContent = "التاريخ: " + ev.date;
+      document.getElementById("previewTime").textContent = "الوقت: " + ev.time;
+      document.getElementById("previewVenue").textContent = "القاعة: " + ev.venue;
+
+      const mapWrap = document.getElementById("previewMapWrap");
+      const mapLink = document.getElementById("previewMapLink");
+      if (ev.map && ev.map.trim()) {
+        mapLink.href = ev.map.trim();
+        mapWrap.style.display = "block";
+      } else {
+        mapWrap.style.display = "none";
+      }
+    }
+
+    document.getElementById("eventForm").addEventListener("submit", (e) => {
+      e.preventDefault();
+      const ev = {
+        names: document.getElementById("eventNames").value.trim(),
+        date: document.getElementById("eventDate").value.trim(),
+        time: document.getElementById("eventTime").value.trim(),
+        venue: document.getElementById("eventVenue").value.trim(),
+        map: document.getElementById("eventMap").value.trim()
+      };
+      localStorage.setItem(STORAGE_EVENT, JSON.stringify(ev));
+      renderEventPreview();
+      document.getElementById("eventMsg").textContent = "تم تحديث بيانات الدعوة بنجاح.";
+    });
+
+    function getGuests() {
+      const saved = localStorage.getItem(STORAGE_GUESTS);
+      return saved ? JSON.parse(saved) : [];
+    }
+
+    function saveGuests(list) {
+      localStorage.setItem(STORAGE_GUESTS, JSON.stringify(list));
+    }
+
+    function renderGuestsDashboard() {
+      const list = getGuests();
+      const container = document.getElementById("guestList");
+      const totalAttending = list
+        .filter((g) => g.status === "سأحضر")
+        .reduce((sum, g) => sum + Number(g.count || 1), 0);
+
+      document.getElementById("totalGuestsBadge").textContent = "إجمالي الحضور: " + totalAttending;
+
+      if (!list.length) {
+        container.innerHTML = "<p>لا توجد تسجيلات حضور حتى الآن.</p>";
+        return;
+      }
+
+      container.innerHTML = list
+        .map((g) => `
+          <div class="guest-item">
+            <div><strong>${g.name}</strong> — <span class="badge">${g.status}</span></div>
+            <div>العدد: ${g.count} | رقم الدخول: <strong>${g.code}</strong></div>
+          </div>
+        `)
+        .join("");
+    }
+
+    document.getElementById("rsvpForm").addEventListener("submit", (e) => {
+      e.preventDefault();
+      const name = document.getElementById("guestName").value.trim();
+      const status = document.getElementById("guestStatus").value;
+      const count = Number(document.getElementById("guestCount").value) || 1;
+      const randomNum = Math.floor(1000 + Math.random() * 9000);
+      const code = `TRF-${randomNum}`;
+
+      const guests = getGuests();
+      guests.unshift({ name, status, count, code });
+      saveGuests(guests);
+      renderGuestsDashboard();
+
+      const passBox = document.getElementById("passBox");
+      passBox.style.display = "block";
+      document.getElementById("passStatusBadge").textContent = status;
+      document.getElementById("passCode").textContent = code;
+      document.getElementById("passSummary").textContent = `${name} (${count} أشخاص)`;
+
+      const qrEl = document.getElementById("qrcode");
+      qrEl.innerHTML = "";
+      new QRCode(qrEl, {
+        text: `${code}|${name}|${status}|${count}`,
+        width: 132,
+        height: 132
+      });
+    });
+
+    document.getElementById("pinForm").addEventListener("submit", (e) => {
+      e.preventDefault();
+      const val = document.getElementById("pinInput").value.trim();
+      if (val === PIN_CODE) {
+        document.getElementById("pinGate").style.display = "none";
+        document.getElementById("guestDashboard").style.display = "block";
+        document.getElementById("pinMsg").textContent = "";
+        renderGuestsDashboard();
+      } else {
+        document.getElementById("pinMsg").textContent = "الرقم السري غير صحيح.";
+      }
+    });
+
+    document.getElementById("lockBtn").addEventListener("click", () => {
+      document.getElementById("guestDashboard").style.display = "none";
+      document.getElementById("pinGate").style.display = "block";
+      document.getElementById("pinInput").value = "";
+    });
+
+    renderEventPreview();
+    renderGuestsDashboard();
+  </script>
+</body>
+</html>
